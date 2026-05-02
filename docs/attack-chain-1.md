@@ -54,7 +54,7 @@ PORT   STATE SERVICE
 80/tcp open  http
 ```
 
-![Step 1 - Attack](attacks/chain-1-ssh/screenshots/chain1-step1-attack.png)
+![Step 1 - Attack](./attacks/chain-1-ssh/screenshots/chain1-step1-attack.png)
 
 ### How Detection Works
 
