@@ -111,12 +111,13 @@ Attacker (Kali)  ─────────────────────
 ---
 
 ## 💬 Slack Alerts
-**Slack Alert Chain 1**
+### Slack Alert Chain 1
+
 ![Slack Alert Chain 1](alerts/slack-notifications/chain-1-alerts.png)
 
 </br>
 
-**Slack Alert Chain 2**
+### Slack Alert Chain 2
 ![Slack Alert Chain 2](alerts/slack-notifications/chain-2-alerts.png)
 
 ---
