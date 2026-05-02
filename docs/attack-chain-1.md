@@ -73,7 +73,7 @@ alert tcp any any -> $HOME_NET any (
 
 **Suricata fast.log:**
 
-![Step 1 - Suricata Log](.../screenshots/chain1-step1-suricata-log.png)
+![Step 1 - Suricata Log](...../screenshots/chain1-step1-suricata-log.png)
 
 **Wazuh Dashboard:**
 
