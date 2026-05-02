@@ -1,0 +1,65 @@
+# =============================================================================
+# Suricata Configuration — Relevant Excerpts
+# Project: Network & Host IDS Lab
+# Full config: /etc/suricata/suricata.yaml
+# Only modified sections are shown below
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. HOME_NET — Define the internal lab network
+# -----------------------------------------------------------------------------
+vars:
+  address-groups:
+    HOME_NET: "[10.10.1.0/24]"
+    EXTERNAL_NET: "!$HOME_NET"
+
+  port-groups:
+    HTTP_PORTS: "80"
+    SHELLCODE_PORTS: "!80"
+    ORACLE_PORTS: 1521
+    SSH_PORTS: 22
+    DNP3_PORTS: 20000
+    MODBUS_PORTS: 502
+    FILE_DATA_PORTS: "[$HTTP_PORTS,110,143]"
+    FTP_PORTS: 21
+    VXLAN_PORTS: 4789
+    TEREDO_PORTS: 3544
+
+# -----------------------------------------------------------------------------
+# 2. AF-PACKET — Set network interface for packet capture
+# Default was 'eth0', changed to 'ens34' (lab interface on Sensor)
+# -----------------------------------------------------------------------------
+af-packet:
+  - interface: ens34
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+    tpacket-v3: yes
+
+# -----------------------------------------------------------------------------
+# 3. RULE FILES — Add custom local.rules
+# Default path changed from /etc/suricata/rules to /var/lib/suricata/rules
+# -----------------------------------------------------------------------------
+default-rule-path: /var/lib/suricata/rules
+
+rule-files:
+  - suricata.rules   # Emerging Threats ruleset (auto-updated via suricata-update)
+  - local.rules      # Custom rules for this lab (see suricata/local.rules)
+
+# -----------------------------------------------------------------------------
+# 4. EVE-LOG — JSON output for Wazuh ingestion
+# Stripped metadata and tagged-packets to reduce field count
+# (Wazuh 4.7 has a JSON decoder field limit)
+# -----------------------------------------------------------------------------
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert:
+            metadata: no
+            tagged-packets: no
+            xff:
+              enabled: no

@@ -1,0 +1,52 @@
+# =============================================================================
+# Custom Suricata Detection Rules
+# Project: Network & Host IDS Lab
+# Author: nvphuong
+# Last Updated: 2026-05-02
+# =============================================================================
+# Rule ID Range: 1000001 - 1000007
+# All rules mapped to MITRE ATT&CK Framework
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# ATTACK CHAIN 1: Scan -> SSH Brute Force -> Login -> Persistence
+# -----------------------------------------------------------------------------
+
+# T1046 - Network Service Discovery
+# Detects Nmap SYN scan by tracking high-volume SYN packets from single source
+# Threshold: 20 SYN packets within 3 seconds
+alert tcp any any -> $HOME_NET any (msg:"SCAN Nmap SYN Scan Detected"; flags:S; threshold:type both, track by_src, count 20, seconds 3; classtype:network-scan; sid:1000001; rev:1;)
+
+# T1110 - Brute Force: SSH
+# Detects repeated SSH connection attempts from single source
+# Threshold: 5 connection attempts within 60 seconds
+alert tcp any any -> $HOME_NET 22 (msg:"BRUTE SSH Brute Force Attempt"; flow:to_server; threshold:type both, track by_src, count 5, seconds 60; classtype:attempted-admin; sid:1000002; rev:1;)
+
+# T1078 - Valid Accounts: Successful SSH Login
+# Detects established SSH session after brute force pattern
+alert tcp any any -> $HOME_NET 22 (msg:"BRUTE SSH Successful Login After Brute Force"; flow:to_server,established; threshold:type both, track by_src, count 1, seconds 60; classtype:successful-admin; sid:1000003; rev:1;)
+
+# -----------------------------------------------------------------------------
+# ATTACK CHAIN 2: SQLi -> Web Shell -> RCE -> DNS Exfiltration
+# -----------------------------------------------------------------------------
+
+# T1190 - Exploit Public-Facing Application: SQL Injection
+# Detects both plaintext and hex-encoded SQL injection payloads
+# Uses PCRE to match UNION SELECT pattern and hex-encoded variants used by sqlmap
+alert http any any -> $HOME_NET 80 (msg:"EXPLOIT SQL Injection Attempt"; flow:to_server,established; pcre:"/(\bUNION\b.{0,20}\bSELECT\b|0x[0-9a-f]{6,}.*0x[0-9a-f]{6,})/Ui"; classtype:web-application-attack; sid:1000004; rev:2;)
+
+# T1505.003 - Server Software Component: Web Shell Upload
+# Detects PHP web shell upload via POST request
+# Matches POST requests containing .php filename and cmd parameter
+alert http any any -> $HOME_NET 80 (msg:"EXPLOIT Web Shell Upload Attempt"; flow:to_server,established; content:"POST"; http_method; content:".php"; content:"cmd"; classtype:web-application-attack; sid:1000005; rev:1;)
+
+# T1059 - Command and Scripting Interpreter: Web Shell RCE
+# Detects web shell command execution via GET request
+# Matches GET requests to .php files with cmd= query parameter
+alert http any any -> $HOME_NET 80 (msg:"EXPLOIT Web Shell Command Execution"; flow:to_server,established; content:"GET"; http_method; content:".php"; content:"cmd="; classtype:web-application-attack; sid:1000006; rev:1;)
+
+# T1071.004 - Application Layer Protocol: DNS Exfiltration
+# Detects high-volume DNS queries from compromised host (Victim only)
+# Threshold: 30 DNS queries within 60 seconds
+# Source restricted to Victim IP to reduce false positives
+alert dns 10.10.1.133 any -> any 53 (msg:"EXFIL DNS Exfiltration Attempt - High Query Volume"; threshold:type both, track by_src, count 30, seconds 60; classtype:policy-violation; sid:1000007; rev:2;)
