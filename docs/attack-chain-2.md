@@ -98,7 +98,7 @@ sqlmap -u "http://10.10.1.133/dvwa/vulnerabilities/sqli/?id=1\&Submit=Submit" \\
 
 
 
-!\[Step 1 - Attack](screenshots/chain2-step1-attack.png)
+!\[Step 1 - Attack](../attacks/chain-2-web/screenshots/chain2-step1-attack.png)
 
 
 
